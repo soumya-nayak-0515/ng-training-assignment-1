@@ -1,0 +1,157 @@
+<div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-horizontal_large slds-wrap"
+style="min-height: 100vh;">
+    <div class="slds-box slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2 slds-p-around_large">
+        <div class="slds-grid slds-m-bottom_medium slds-grid_align-spread">
+            <div class="slds-media">
+                <!-- Title -->
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-task" title="Task Icon">
+                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                            <use xlink:href="assets/icons/standard-sprite/svg/symbols.svg#task"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-text-heading_medium desktop-view">Tasks</h1>
+                    <h1 class="slds-text-heading_small mobile-view">Tasks (Mobile)</h1>
+                    <p class="desktop-view">All Tasks</p>
+                </div>
+            </div>
+
+            <!-- New Task and Refresh Button -->
+            <div>
+                <button class="slds-button slds-button_brand" (click)="openNewTaskModal()">Add Task</button>
+                <app-add-edit-task-form *ngIf="isModalOpen" [task]="selectedTask"
+                    (taskSaved)="handleTaskSaved()"></app-add-edit-task-form>
+                <button class="slds-button slds-button_neutral" (click)="refreshPage()">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="slds-grid slds-m-bottom_medium slds-grid_align-end">
+            <div class="slds-form-element">
+                <div class="slds-input-has-icon slds-input-has-icon_left-right">
+                    <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default"
+                        aria-hidden="true">
+                        <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                    </svg>
+                    <input type="text" class="slds-input" placeholder="Search tasks..." [(ngModel)]="searchQuery"
+                        (input)="onSearch()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Listing Table -->
+        <table class="slds-table slds-table_bordered slds-table_fixed-layout">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="check-all">
+                            <label class="slds-checkbox__label" for="check-all">
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
+                        </div>
+                    </th>
+                    <th scope="col">Assigned To</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Comments</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let task of paginatedTasks">
+                    <td>
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="{{ task.id }}">
+                            <label class="slds-checkbox__label" for="{{ task.id }}">
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
+                        </div>
+                    </td>
+                    <td>{{ task.assignedTo }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.dueDate | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>
+                        <div class="slds-dropdown-trigger slds-dropdown-trigger_hover">
+                            <button class="slds-button slds-button_icon slds-button_icon-border-filled"
+                                aria-haspopup="true" title="Show More">
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#down"></use>
+                                </svg>
+                            </button>
+                            <div class="slds-dropdown slds-dropdown_right">
+                                <ul class="slds-dropdown__list" role="menu">
+                                    <li class="slds-dropdown__item" role="presentation">
+                                        <a href="javascript:void(0);" role="menuitem" (click)="editTask(task)">
+                                            <span class="slds-truncate">Edit</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-dropdown__item" role="presentation">
+                                        <a href="javascript:void(0);" role="menuitem" (click)="openDeleteModal(task)">
+                                            <span class="slds-truncate">Delete</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="slds-grid slds-grid_align-spread slds-p-around_small">
+
+            <!-- Left Side: Table Size Selector -->
+            <div>
+                <div class="slds-input-has-icon slds-input-has-icon_left slds-m-left_x-small">
+                    <input id="pageSize" class="slds-input" type="number" [(ngModel)]="pageSize"
+                        (change)="updatePagination()" min="1" max="100" />
+                </div>
+            </div>
+
+            <!-- Right Side: Pagination Controls -->
+            <div >
+                <button class="slds-button slds-button_neutral" (click)="goToFirstPage()"
+                    [disabled]="currentPage === 1">« First</button>
+                <button class="slds-button slds-button_neutral" (click)="goToPreviousPage()"
+                    [disabled]="currentPage === 1">‹ Prev</button>
+                <span class="slds-m-horizontal_small">{{ currentPage }}</span>
+                <button class="slds-button slds-button_neutral" (click)="goToNextPage()"
+                    [disabled]="currentPage === totalPages">Next ›</button>
+                <button class="slds-button slds-button_neutral" (click)="goToLastPage()"
+                    [disabled]="currentPage === totalPages">Last »</button>
+            </div>
+        </div> 
+    </div>
+
+    <!-- Delete Modal -->
+    <div *ngIf="showDeleteModal" class="slds-modal slds-fade-in-open" role="dialog">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header" style="background-color: red;">
+                <h2 class="slds-text-heading_medium" style="color: white;">Delete Task</h2>
+                <!-- Heading in red color -->
+            </header>
+
+            <div class="slds-modal__content slds-p-around_medium">
+                <p>Do you want to delete the task assigned to <strong>{{ selectedTask?.assignedTo }}</strong>?</p>
+            </div>
+
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" (click)="closeDeleteModal()">No</button>
+                <button class="slds-button slds-button_destructive" (click)="deleteTask()">Yes</button>
+            </footer>
+        </div>
+    </div>
+
+    <div *ngIf="showDeleteModal" class="slds-backdrop slds-backdrop_open">
+        <div *ngIf="paginatedTasks.length === 0" class="slds-text-align_center slds-m-top_medium">
+            <p class="slds-text-heading_medium">No Records Found</p>
+        </div>
+    </div>
+</div>

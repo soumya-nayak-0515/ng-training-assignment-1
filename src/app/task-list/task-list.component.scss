@@ -1,0 +1,108 @@
+.slds-p-around_small {
+    padding: 0.5rem;
+  }
+  
+  .slds-grid_align-spread {
+    justify-content: space-between;
+  }
+  
+  .slds-m-left_x-small {
+    margin-left: 0.5rem;
+  }
+
+  .slds-dropdown {
+    position: absolute; /* Make sure it's positioned absolutely to its container */
+    z-index: 1000; /* Add a higher z-index value to ensure it appears on top */
+}
+
+.slds-dropdown-trigger {
+    position: relative; /* Ensure the parent of the dropdown is relatively positioned */
+}
+
+/* Media Query for Small Mobile Devices (up to 480px) */
+@media only screen and (max-width: 480px) {
+  .mobile-view {
+      display: block; /* Example of showing specific content */
+  }
+  .desktop-view {
+      display: none; /* Example of hiding specific content */
+  }
+  /* Adjust buttons, table and other components */
+  .slds-button {
+      width: 100%; /* Full width buttons on mobile */
+  }
+  .slds-input {
+      width: 100%;
+  }
+  .slds-table th, .slds-table td {
+      font-size: 12px;
+      padding: 8px;
+  }
+  .slds-dropdown-trigger {
+      display: block;
+  }
+  .slds-media__figure {
+      margin-right: 0;
+  }
+}
+
+/* Media Query for Mobile Devices (up to 768px) */
+@media only screen and (max-width: 768px) {
+  .mobile-view {
+      display: block;
+  }
+  .desktop-view {
+      display: none;
+  }
+  .slds-table th, .slds-table td {
+      font-size: 14px;
+  }
+  .slds-button {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+  .slds-input-has-icon {
+      display: flex;
+      width: 100%;
+  }
+  /* Pagination responsive */
+  .pagination-controls {
+      display: flex;
+      flex-direction: column;
+  }
+}
+
+/* Media Query for Tablets and Small Desktops (768px to 1024px) */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .tablet-view {
+      display: block;
+  }
+  .desktop-view {
+      display: none;
+  }
+  .slds-grid {
+      display: flex;
+      flex-wrap: wrap;
+  }
+  .slds-table th, .slds-table td {
+      padding: 10px;
+  }
+  /* Adjust column sizes */
+  .slds-media__figure {
+      margin-right: 10px;
+  }
+  .slds-button {
+      margin: 5px;
+      width: auto;
+  }
+}
+
+/* Media Query for Desktops (1024px and above) */
+@media only screen and (min-width: 1024px) {
+  .mobile-view {
+      display: none;
+  }
+  .desktop-view {
+      display: block;
+  }
+}

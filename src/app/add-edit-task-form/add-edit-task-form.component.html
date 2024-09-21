@@ -1,0 +1,117 @@
+<div class="slds-modal slds-fade-in-open" role="dialog">
+    <div class="slds-modal__container" style="width: 50%;"> <!-- Makes the modal wider -->
+        <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close" title="Close" (click)="closeModal()">
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                    <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">{{ task.id ? 'Edit' : 'New' }} Task</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium">
+            <!-- Add form validation using ngForm -->
+            <form #taskForm="ngForm" (ngSubmit)="saveTask(taskForm)" class="slds-form">
+
+                <!-- Row 1: Assigned To and Status (Side by Side with Small Gap) -->
+                <div class="slds-grid slds-wrap slds-m-bottom_medium">
+                    <!-- Assigned To -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+                        <div class="slds-form-element"
+                            [ngClass]="{'slds-has-error': assignedTo.invalid && assignedTo.touched}">
+                            <label class="slds-form-element__label" for="assignedTo">Assigned To<span
+                                class="slds-required">*</span></label>
+                            <div class="slds-form-element__control">
+                                <select id="assignedTo" name="assignedTo" [(ngModel)]="task.assignedTo"
+                                    #assignedTo="ngModel" class="slds-select" required>
+                                    <option value="" disabled>Select User</option>
+                                    <option *ngFor="let user of assignedToOptions" [value]="user">{{ user }}</option>
+                                </select>
+                            </div>
+                            <!-- Error message for Assigned To -->
+                            <div *ngIf="assignedTo.invalid && assignedTo.touched" class="slds-form-element__help">
+                                Assigned To is required.</div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+                        <div class="slds-form-element" [ngClass]="{'slds-has-error': status.invalid && status.touched}">
+                            <label class="slds-form-element__label" for="status">Status<span
+                                class="slds-required">*</span></label>
+                            <div class="slds-form-element__control">
+                                <select id="status" name="status" [(ngModel)]="task.status" #status="ngModel"
+                                    class="slds-select" required>
+                                    <option value="" disabled>Select Status</option>
+                                    <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                                </select>
+                            </div>
+                            <!-- Error message for Status -->
+                            <div *ngIf="status.invalid && status.touched" class="slds-form-element__help">Status is
+                                required.</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="slds-grid slds-wrap slds-m-bottom_medium">
+                    <!--  Due Date -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="dueDate">Due Date</label>
+                            <div class="slds-form-element__control">
+                                <input type="date" id="dueDate" name="dueDate" [(ngModel)]="task.dueDate"
+                                    class="slds-input" required>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+                        <div class="slds-form-element"
+                            [ngClass]="{'slds-has-error': priority.invalid && priority.touched}">
+                            <label class="slds-form-element__label" for="priority">Priority<span
+                                class="slds-required">*</span></label>
+                            <div class="slds-form-element__control">
+                                <select id="priority" name="priority" [(ngModel)]="task.priority" #priority="ngModel"
+                                    class="slds-select" required>
+                                    <option value="" disabled>Select Priority</option>
+                                    <option *ngFor="let priority of priorityOptions" [value]="priority">{{ priority }}
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Error message for Priority -->
+                            <div *ngIf="priority.invalid && priority.touched" class="slds-form-element__help">Priority
+                                is required.</div>
+                        </div>
+                    </div>
+                </div> 
+
+                <!-- Row 4: Description (Full Width and Long) -->
+                <div class="slds-grid slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-1"> <!-- Full width column -->
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="description">Description</label>
+                            <div class="slds-form-element__control">
+                                <textarea id="description" name="description" [(ngModel)]="task.description"
+                                    class="slds-textarea" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Buttons -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" (click)="closeModal()">Cancel</button>
+                    <!-- Disable Save button until form is valid -->
+                    <button type="submit" class="slds-button slds-button_brand" [disabled]="taskForm.invalid">Save
+                        Task</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="slds-backdrop slds-backdrop_open"></div>
